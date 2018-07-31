@@ -1,5 +1,6 @@
 (ns clojure-login-test.handler-test
-  (:require [clojure.test :refer :all]
+  (:require [cheshire.core :as cheshire]
+            [clojure.test :refer :all]
             [ring.mock.request :as mock]
             [clojure-login-test.handler :refer :all]))
 
@@ -11,8 +12,14 @@
 
   (testing "not-found route"
     (let [response (app (mock/request :get "/invalid"))]
-      (is (= (:status response) 404)))))
+      (is (= (:status response) 404))))
 
-  (testing "create user"
-    (let [response (app (mock/request :post "/app/v1/user"))]
-      (is (= (:status response) 404)))))
+  (testing "should add user"
+    (let [user {:email "teste@teste.com"
+                :username "batman"
+                :password "coringa"}
+
+          response (app (-> (mock/request :post "/api/v1/user")
+                            (mock/content-type "application/json")
+                            (mock/body (cheshire/generate-string user))))]
+      (is (= (:status response) 201)))))
