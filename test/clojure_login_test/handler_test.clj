@@ -12,3 +12,7 @@
   (testing "not-found route"
     (let [response (app (mock/request :get "/invalid"))]
       (is (= (:status response) 404)))))
+
+  (testing "create user"
+    (let [response (app (mock/request :post "/app/v1/user"))]
+      (is (= (:status response) 404)))))
